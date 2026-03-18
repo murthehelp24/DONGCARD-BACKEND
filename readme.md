@@ -1,6 +1,5 @@
-# 🃏 One Piece Card Shop API Documentation
+# 🃏 DONGCARD One Piece Card Shop 
 
-สรุปรายการ API Endpoints สำหรับโปรเจกเว็บไซต์ขายการ์ดวันพีช (B2C + Wishlist)
 
 ## 🔐 Authentication & Users
 | Method | Path | Access | Description |
@@ -44,4 +43,4 @@
 - `minPrice` / `maxPrice`: กรองตามช่วงราคา (เช่น `?minPrice=100&maxPrice=500`)
 
 
-- ถ้าทำทันให้เพิ่มฟีเจอร์ให้ user แก้ไขที่อยู่หรือแก้ไขโปรไฟล์ของตัวเองได้
+- ถ้าทำทันจะเพิ่มฟีเจอร์ให้ user แก้ไขที่อยู่หรือแก้ไขโปรไฟล์ของตัวเองได้
