@@ -13,8 +13,7 @@ export async function getAllCard(req, res, next) {
 
 export async function getCardById(req, res, next) {
   try {
-    const { id } = req.params
-    const card = await findCardById(id)
+    const card = await findCardById(req.params.id)
     if (!card) throw createError(404, 'ไม่พบข้อมูลการ์ดใบนี้')
     res.json({ card })
   } catch (error) {
@@ -36,8 +35,7 @@ export async function addCard(req, res, next) {
 
 export async function editCard(req, res, next) {
   try {
-    const { id } = req.params
-    const updatedCard = await updateCard(id, req.body)
+    const updatedCard = await updateCard(req.params.id, req.body)
     res.json({
       message: 'แก้ไขการ์ดสำเร็จ',
       card: updatedCard
@@ -49,10 +47,12 @@ export async function editCard(req, res, next) {
 
 export async function deleteCard(req, res, next) {
   try {
-    const { id } = req.params
-    await removeCard(id)
-    res.json({ message: 'ลบการ์ดออกจากระบบสำเร็จ', id })
+    const card = await removeCard(req.params.id)
+    res.json({ message: 'ลบการ์ดออกจากระบบสำเร็จ', card })
   } catch (error) {
+    if (error.code === 'P2003') {
+      return next(createError(400, 'ไม่สามารถลบการ์ดได้ เนื่องจากการ์ดใบนี้มีการสั่งซื้อของลูกค้า'))
+    }
     next(error)
   }
 }

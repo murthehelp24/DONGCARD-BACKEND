@@ -5,9 +5,9 @@ export function findAllCard() {
   return prisma.card.findMany()
 }
 
-export function findCardById(id) {
+export function findCardById(cardId) {
   return prisma.card.findUnique({
-    where: { id }
+    where: { id: cardId }
   })
 }
 
@@ -15,9 +15,9 @@ export function createCard(data) {
   return prisma.card.create({ data })
 }
 
-export function updateCard(id, data) {
+export function updateCard(cardId, data) {
   return prisma.card.update({
-    where: { id },
+    where: { id: cardId },
     data: {
       name: data.name,
       rarity: data.rarity,
@@ -28,8 +28,8 @@ export function updateCard(id, data) {
   })
 }
 
-export function removeCard(id) {
+export function removeCard(cardId) {
   return prisma.card.delete({
-    where: { id }
+    where: { id: cardId }
   })
 }
