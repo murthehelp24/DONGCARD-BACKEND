@@ -10,10 +10,10 @@ export async function register(req, res, next) {
 
     // เช็ค username , email ว่ามีหรือยัง
     const checkUsername = await findUserByUsername(username)
-    if (checkUsername) throw createError(409, 'อีเมล์นี้ถูกใช้งานไปแล้ว')
+    if (checkUsername) throw createError(409, 'ชื่อผู้ใช้งานนี้มีผู้ใช้แล้ว')
 
     const checkEmail = await findUserByEmail(email)
-    if (checkEmail) throw createError(409, 'ชื่อผู้ใช้งานนี้มีผู้ใช้แล้ว')
+    if (checkEmail) throw createError(409, 'อีเมล์นี้ถูกใช้งานไปแล้ว')
 
     // hashPassword
     const hashPassword = await bcrypt.hash(password, 5)
