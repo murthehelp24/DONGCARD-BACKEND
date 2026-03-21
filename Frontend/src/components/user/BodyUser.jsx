@@ -11,28 +11,15 @@ function BodyUser() {
           <header className="flex justify-between items-center mb-8">
             <h1 className="text-3xl font-bold">One Piece Special Offers</h1>
           </header>
-
           <div className='flex gap-2'>
-            <Card/>
-          </div>
 
+            <Card />
 
-
-
-
-          <div className="join self-center mt-10">
-            <button className="join-item btn">«</button>
-            <button className="join-item btn btn-active">1</button>
-            <button className="join-item btn">2</button>
-            <button className="join-item btn">»</button>
           </div>
         </main>
 
-
-        <Filter/>
-
+        <Filter />
       </div>
-
     </div>
   )
 }

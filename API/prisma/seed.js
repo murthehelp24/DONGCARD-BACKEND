@@ -4,37 +4,53 @@ import { fileURLToPath } from 'url';
 import csv from 'csv-parser';
 import { prisma } from '../src/lib/prisma.js'
 
-
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// ฟังก์ชันสำหรับสุ่มราคาตามความหายาก (Rarity)
+const getRandomPrice = (rarity) => {
+  const priceMap = {
+    'SP CARD': { min: 2000, max: 5000 },
+    'SEC': { min: 800, max: 3500 },
+    'SR': { min: 150, max: 600 },
+    'L': { min: 100, max: 500 },
+    'R': { min: 40, max: 120 },
+    'UC': { min: 10, max: 40 },
+    'C': { min: 5, max: 15 },
+  };
+
+  // ถ้าไม่เจอ rarity ที่กำหนด ให้สุ่มช่วง 20-100 บาท
+  const range = priceMap[rarity] || { min: 20, max: 100 };
+  return Math.floor(Math.random() * (range.max - range.min + 1)) + range.min;
+};
 
 async function importCSV() {
   const csvFilePath = path.join(__dirname, 'OnePieceTCG_Cards.csv');
 
-  // 1. เช็กว่าไฟล์มีอยู่จริงไหมก่อนเริ่ม
   if (!fs.existsSync(csvFilePath)) {
     console.error(`❌ ไม่พบไฟล์ที่: ${csvFilePath}`);
-    console.log("กรุณาย้ายไฟล์ CSV ไปไว้ที่โฟลเดอร์เดียวกับสคริปต์นี้");
     return;
   }
 
   const results = [];
-
   console.log('📖 กำลังอ่านข้อมูลจาก CSV...');
 
   fs.createReadStream(csvFilePath)
     .pipe(csv())
     .on('data', (data) => results.push(data))
     .on('end', async () => {
-      console.log(`✅ อ่านเสร็จสิ้น: ${results.length} แถว. กำลังบันทึกลงฐานข้อมูล...`);
+      console.log(`✅ อ่านเสร็จสิ้น: ${results.length} แถว. กำลังบันทึก...`);
 
       for (const row of results) {
         try {
-          // ใช้ upsert เพื่อกันข้อมูลซ้ำ (ถ้ามี id เดิมจะ update ถ้าไม่มีจะ create)
+          // สุ่มค่าเตรียมไว้ก่อน
+          const randomPrice = getRandomPrice(row.card_rarity);
+          const randomStock = Math.floor(Math.random() * 30) + 1; // สุ่มสต็อก 1-30 ใบ
+
           await prisma.card.upsert({
             where: { id: row.card_id }, 
             update: {
-              price: 0, // หรือใส่ logic คำนวณราคาถ้ามี
-              stock: 0,
+              price: randomPrice,
+              stock: randomStock,
             },
             create: {
               id: row.card_id,
@@ -42,12 +58,11 @@ async function importCSV() {
               rarity: row.card_rarity,
               color: row.card_color,
               type: row.card_type,
-              // แปลงค่าจาก CSV เป็น Type ที่ Prisma ต้องการ
               power: row.card_power ? Math.floor(parseFloat(row.card_power)) : null,
-              attribute: null, // ใน CSV ไม่มีช่องนี้ชัดเจน
+              attribute: null,
               image: row.card_image,
-              price: 0.0,
-              stock: 0,
+              price: randomPrice,
+              stock: randomStock,
             },
           });
         } catch (err) {
@@ -55,7 +70,7 @@ async function importCSV() {
         }
       }
 
-      console.log('🚀 นำเข้าข้อมูลสำเร็จทั้งหมด!');
+      console.log('🚀 นำเข้าข้อมูลและสุ่มราคา/สต็อกสำเร็จ!');
       await prisma.$disconnect();
     });
 }

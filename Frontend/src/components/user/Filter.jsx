@@ -29,31 +29,31 @@ function Filter() {
           <div className="flex flex-col gap-2">
             <label className="label cursor-pointer justify-start gap-3 p-0 ">
               <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" />
-              <span className="label-text">Common</span>
+              <span className="label-text">C</span>
             </label>
             <label className="label cursor-pointer justify-start gap-3 p-0 ">
               <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" />
-              <span className="label-text">Uncommon</span>
+              <span className="label-text">UC</span>
             </label>
             <label className="label cursor-pointer justify-start gap-3 p-0 ">
               <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" />
-              <span className="label-text">Rare</span>
+              <span className="label-text">R</span>
             </label>
             <label className="label cursor-pointer justify-start gap-3 p-0 ">
               <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" />
-              <span className="label-text">Leader</span>
+              <span className="label-text">L</span>
             </label>
             <label className="label cursor-pointer justify-start gap-3 p-0 ">
               <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" />
-              <span className="label-text">Super Rare</span>
+              <span className="label-text">SR</span>
             </label>
             <label className="label cursor-pointer justify-start gap-3 p-0 ">
               <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" />
-              <span className="label-text">Secret Rear</span>
+              <span className="label-text">SEC</span>
             </label>
             <label className="label cursor-pointer justify-start gap-3 p-0 ">
               <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" />
-              <span className="label-text">Special Rare</span>
+              <span className="label-text">SP CARD</span>
             </label>
           </div>
         </section>
