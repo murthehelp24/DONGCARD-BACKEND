@@ -1,8 +1,9 @@
 import React from 'react'
+import CartUser from '../../components/user/CartUser'
 
 function Cart() {
   return (
-    <div>Cart</div>
+    <CartUser/>
   )
 }
 

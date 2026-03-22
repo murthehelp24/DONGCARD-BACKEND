@@ -1,10 +1,14 @@
+import { Outlet } from "react-router"
+import BodyUser from "../components/user/BodyUser"
+import NavbarUser from "../components/user/NavbarUser"
 import HomeUser from "../pages/user/HomeUser"
 
 
 function LayoutUser() {
   return (
       <>
-      <HomeUser/>
+      <NavbarUser/>
+      <Outlet/>
       </>
   )
 }

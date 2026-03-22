@@ -1,11 +1,24 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { useCart } from '../../utils/CartContext';
 
-const Card = () => {
+const Card = (props) => {
+  const { filters } = props
+  const { addToCart } = useCart()
+
   const [cards, setCards] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [wishlist, setWishlist] = useState([]);
   const cardsPerPage = 20;
+
+  const filteredCards = cards.filter((card) => {
+    const matchName = card.name.includes('Luffy')
+    const matchPrice = card.price <= filters.price
+
+    const matchRarity = filters.rarity.length === 0 || filters.rarity.includes(card.rarity);
+    const matchColor = filters.color.length === 0 || filters.color.includes(card.color);
+    return matchName && matchPrice && matchRarity && matchColor;
+  })
 
   useEffect(() => {
     const fetchCards = async () => {
@@ -17,7 +30,7 @@ const Card = () => {
       }
     };
     fetchCards();
-  }, []);
+  }, [filters]);
 
   const toggleWishlist = (id) => {
     setWishlist(prev =>
@@ -25,7 +38,6 @@ const Card = () => {
     );
   };
 
-  const filteredCards = cards.filter((card) => card.name.includes("Nami"))
 
   const indexOfLastCard = currentPage * cardsPerPage
   const indexOfFirstCard = indexOfLastCard - cardsPerPage
@@ -34,8 +46,8 @@ const Card = () => {
   const totalPages = Math.ceil(filteredCards.length / cardsPerPage)
 
   return (
-    <div className="p-6 bg-[#1a1c23] min-h-screen flex flex-col">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 flex-grow">
+    <div className="p-6 bg-base-200 min-h-screen flex flex-col">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {currentCards.map((card) => (
           <div key={card.id} className="group flex bg-[#23262f] border border-gray-700/50 rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300 shadow-xl">
 
@@ -76,7 +88,12 @@ const Card = () => {
                   <span className="text-xs text-gray-500 block uppercase">Price</span>
                   <span className="text-xl font-black text-white">${card.price}</span>
                 </div>
-                <button className="btn btn-primary btn-sm w-full no-animation hover:scale-[1.02] active:scale-95 text-xs tracking-tighter">ADD TO CART</button>
+                <button
+                  onClick={() => addToCart(card)} 
+                  className="btn btn-primary btn-sm w-full ..."
+                >
+                  ADD TO CART
+                </button>
               </div>
             </div>
 

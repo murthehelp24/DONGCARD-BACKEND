@@ -1,14 +1,30 @@
 import React from 'react'
 
-function Filter() {
+function Filter(props) {
+  const { filters, setFilters } = props
+
+  const hdlCheckboxChange = (category, value) => {
+    setFilters(prev => {
+      const currentList = prev[category]
+      const newList = currentList.includes(value)
+        ? currentList.filter(item => item !== value)
+        : [...currentList, value];
+      return { ...prev, [category]: newList }
+    })
+  }
   return (
     <div>
       <div className="p-6 bg-base-200 w-80 min-h-screen flex flex-col gap-2 text-base-content">
 
         <section>
           <div className="form-control w-full mb-6">
-            <label className="label"><span className="label-text font-semibold">Price Range</span></label>
-            <input type="range" min="0" max="1000" className="range range-primary range-xs" />
+            <label className="label"><span className="label-text font-semibold">Price Range :$ {filters.price}</span></label>
+            <input
+              type="range" min="0" max="5000"
+              className="range range-primary range-xs"
+              value={filters.price}
+              onChange={(e) => setFilters({ ...filters, price: e.target.value })}
+            />
           </div>
           <div className="flex justify-between mt-4 gap-2">
             <div className="form-control w-full">
@@ -17,7 +33,7 @@ function Filter() {
             </div>
             <div className="form-control w-full">
               <label className="label"><span className="label-text-alt">To</span></label>
-              <input type="text" placeholder="$ 1000" className="input input-bordered input-sm w-full text-center" />
+              <input type="text"  placeholder="$ 5000" className="input input-bordered input-sm w-full text-center" />
             </div>
           </div>
         </section>
@@ -26,90 +42,44 @@ function Filter() {
 
         <section>
           <h3 className="font-bold text-lg mb-3 text-primary">Rarity</h3>
-          <div className="flex flex-col gap-2">
-            <label className="label cursor-pointer justify-start gap-3 p-0 ">
-              <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" />
-              <span className="label-text">C</span>
+          {['C', 'UC', 'R', 'L', 'SR', 'SEC', 'SP CARD'].map(item => (
+            <label key={item} className="label cursor-pointer flex gap-3 p-0 mb-2">
+              <input
+                type="checkbox"
+                className="checkbox checkbox-sm checkbox-primary"
+                checked={filters.rarity.includes(item)}
+                onChange={() => hdlCheckboxChange('rarity', item)}
+              />
+              <span className="label-text">{item}</span>
             </label>
-            <label className="label cursor-pointer justify-start gap-3 p-0 ">
-              <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" />
-              <span className="label-text">UC</span>
-            </label>
-            <label className="label cursor-pointer justify-start gap-3 p-0 ">
-              <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" />
-              <span className="label-text">R</span>
-            </label>
-            <label className="label cursor-pointer justify-start gap-3 p-0 ">
-              <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" />
-              <span className="label-text">L</span>
-            </label>
-            <label className="label cursor-pointer justify-start gap-3 p-0 ">
-              <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" />
-              <span className="label-text">SR</span>
-            </label>
-            <label className="label cursor-pointer justify-start gap-3 p-0 ">
-              <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" />
-              <span className="label-text">SEC</span>
-            </label>
-            <label className="label cursor-pointer justify-start gap-3 p-0 ">
-              <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" />
-              <span className="label-text">SP CARD</span>
-            </label>
-          </div>
+          ))}
         </section>
 
         <div className="divider my-0"></div>
 
         <section>
           <h3 className="font-bold text-lg mb-3 text-primary">Color</h3>
-          <div className="grid grid-cols-1 gap-2">
-            <label className="label cursor-pointer justify-start gap-3 p-0 ">
-              <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" />
-              <span className="label-text">Red</span>
+          {['Red', 'Green', 'Blue', 'Purple', 'Black', 'Yellow'].map(item => (
+            <label key={item} className="label cursor-pointer flex gap-3 p-0 mb-2">
+              <input
+                type="checkbox"
+                className="checkbox checkbox-sm checkbox-primary"
+                checked={filters.color.includes(item)}
+                onChange={() => hdlCheckboxChange('color', item)}
+              />
+              <span className="label-text">{item}</span>
             </label>
-            <label className="label cursor-pointer justify-start gap-3 p-0 ">
-              <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" />
-              <span className="label-text">Green</span>
-            </label>
-            <label className="label cursor-pointer justify-start gap-3 p-0 ">
-              <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" />
-              <span className="label-text">Blue</span>
-            </label>
-            <label className="label cursor-pointer justify-start gap-3 p-0 ">
-              <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" />
-              <span className="label-text">Purple</span>
-            </label>
-            <label className="label cursor-pointer justify-start gap-3 p-0 ">
-              <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" />
-              <span className="label-text">Black</span>
-            </label>
-            <label className="label cursor-pointer justify-start gap-3 p-0 ">
-              <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" />
-              <span className="label-text">Yellow</span>
-            </label>
-          </div>
+          ))}
         </section>
 
         <div className="divider my-0"></div>
 
-        <section>
-          <h3 className="font-bold text-lg mb-3 text-primary">Illustration/Art Variant</h3>
-          <div className="flex flex-col gap-2">
-            <label className="label cursor-pointer justify-start gap-3 p-0">
-              <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" />
-              <span className="label-text">Standard Art</span>
-            </label>
-            <label className="label cursor-pointer justify-start gap-3 p-0">
-              <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" />
-              <span className="label-text">Alternate Art (AA) / Parallel</span>
-            </label>
-          </div>
-        </section>
 
-        <div className="divider my-0"></div>
+        <button className="btn btn-outline btn-error btn-block"
+          onClick={() => setFilters({ price: 5000, rarity: [], color: [] })}
 
-        <button className="btn btn-primary btn-block ">Apply Filters</button>
-        <button className="btn btn-outline btn-error btn-block">Reset Filter</button>
+        >
+          Reset Filter</button>
       </div>
 
     </div>

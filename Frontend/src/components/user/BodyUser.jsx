@@ -1,24 +1,30 @@
+import { useState } from 'react';
 import Card from './Card'
 import Filter from './Filter'
 
 function BodyUser() {
+  const [filters, setFilters] = useState({
+    price: 5000,
+    rarity: [],
+    color: [],
+  });
   return (
     <div>
       <div className="drawer lg:drawer-open bg-base-200">
         <input id="filter-drawer" type="checkbox" className="drawer-toggle" />
 
         <main className="drawer-content flex flex-col p-4 ">
-          <header className="flex justify-between items-center mb-8">
+          <header className="flex justify-between items-center ml-2 mt-1">
             <h1 className="text-3xl font-bold">One Piece Special Offers</h1>
           </header>
           <div className='flex gap-2'>
 
-            <Card />
+            <Card filters={filters} />
 
           </div>
         </main>
 
-        <Filter />
+        <Filter filters={filters} setFilters={setFilters} />
       </div>
     </div>
   )

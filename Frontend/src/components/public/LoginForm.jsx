@@ -5,6 +5,7 @@ import mainApi from "../../api/mainApi";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../utils/authContext";
+import RegisterForm from "./RegisterForm";
 
 export default function LoginPage() {
   const { login } = useAuth()
@@ -81,9 +82,20 @@ export default function LoginPage() {
         </fieldset>
         <div className="divider">หรือ</div>
         <p className="text-center text-sm">
-          ยังไม่มีบัญชี? <a href="/register" className="link link-primary">สมัครสมาชิก</a>
+          ยังไม่มีบัญชี? <button onClick={() => {
+            document.getElementById('login-form').close();
+            document.getElementById('register-form').showModal();
+          }} type='button' className="link link-primary">สมัครสมาชิก</button>
         </p>
       </form>
+
+      <dialog id="register-form" className="modal">
+        <div className="modal-box">
+
+          <RegisterForm />
+
+        </div>
+      </dialog>
     </>
   );
 }
