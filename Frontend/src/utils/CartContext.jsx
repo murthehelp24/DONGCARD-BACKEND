@@ -24,7 +24,7 @@ export const CartProvider = ({ children }) => {
   const totalPrice = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0)
 
 
- // ลบตะกร้า
+  // ลบตะกร้า
   const removeFromCart = (id) => {
     setCartItems((prev) => prev.filter((item) => item.id !== id))
   };
@@ -39,10 +39,15 @@ export const CartProvider = ({ children }) => {
         }
         return item
       })
-    );
-  };
+    )
+  }
+
+  const clearCart = () => {
+    setCartItems([]); // ล้าง State เป็นอาเรย์ว่าง
+    localStorage.removeItem('cart'); // ถ้าคุณมีการเก็บไว้ใน localStorage ให้ลบออกด้วย
+  }
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, cartCount, totalPrice, removeFromCart, updateQuantity }}>
+    <CartContext.Provider value={{ cartItems, addToCart, cartCount, totalPrice, removeFromCart, updateQuantity, clearCart }}>
       {children}
     </CartContext.Provider>
   );

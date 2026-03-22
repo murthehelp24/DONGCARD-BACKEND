@@ -1,72 +1,51 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import { useCart } from '../../utils/CartContext';
+import mainApi from '../../api/mainApi';
+import WishlistUser from './WishlistUser';
+import Pagination from './Pagination';
 
 const Card = (props) => {
   const { filters } = props
   const { addToCart } = useCart()
-
   const [cards, setCards] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
-  const [wishlist, setWishlist] = useState([]);
   const cardsPerPage = 20;
 
-  const filteredCards = cards.filter((card) => {
-    const matchName = card.name.includes('Luffy')
-    const matchPrice = card.price <= filters.price
-
-    const matchRarity = filters.rarity.length === 0 || filters.rarity.includes(card.rarity);
-    const matchColor = filters.color.length === 0 || filters.color.includes(card.color);
-    return matchName && matchPrice && matchRarity && matchColor;
-  })
 
   useEffect(() => {
     const fetchCards = async () => {
       try {
-        const response = await axios.get('http://localhost:8888/api/cards')
+        const response = await mainApi.get('/cards')
         setCards(response.data.cards)
       } catch (err) {
         console.error("Error fetching data:", err)
       }
     };
     fetchCards();
-  }, [filters]);
+  }, []);
 
-  const toggleWishlist = (id) => {
-    setWishlist(prev =>
-      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
-    );
-  };
+  const filteredCards = cards.filter((card) => {
+    const matchPrice = card.price <= filters.price
 
+    const matchRarity = filters.rarity.length === 0 || filters.rarity.includes(card.rarity);
+    const matchColor = filters.color.length === 0 || filters.color.includes(card.color);
+    return matchPrice && matchRarity && matchColor;
+  })
 
-  const indexOfLastCard = currentPage * cardsPerPage
-  const indexOfFirstCard = indexOfLastCard - cardsPerPage
-  const currentCards = filteredCards.slice(indexOfFirstCard, indexOfLastCard)
-
+  const indexOfLastCard = currentPage * cardsPerPage;
+  const indexOfFirstCard = indexOfLastCard - cardsPerPage;
+  const currentCards = filteredCards.slice(indexOfFirstCard, indexOfLastCard);
   const totalPages = Math.ceil(filteredCards.length / cardsPerPage)
 
   return (
     <div className="p-6 bg-base-200 min-h-screen flex flex-col">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {currentCards.map((card) => (
-          <div key={card.id} className="group flex bg-[#23262f] border border-gray-700/50 rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300 shadow-xl">
+          <div key={card.id} className=" group flex bg-[#23262f] border border-gray-700/50 rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300 shadow-xl">
 
             <div className="relative w-[45%] bg-black/20 p-2 flex items-center justify-center overflow-hidden">
 
-              {/* ปุ่ม Wishlist */}
-              <button
-                onClick={() => toggleWishlist(card.id)}
-                className="absolute top-2 left-2 z-10 p-1.5 rounded-full bg-black/40 hover:bg-black/60 transition-colors group/heart"
-              >
-                <svg
-                  xmlns="http://www.w3.org"
-                  className={`h-5 w-5 transition-transform active:scale-125 ${wishlist.includes(card.id) ? 'fill-red-500 stroke-red-500' : 'fill-none stroke-white'}`}
-                  viewBox="0 0 24 24"
-                  strokeWidth="2"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                </svg>
-              </button>
+              <WishlistUser card={card} />
 
               <img
                 src={`https://wsrv.nl/?url=${card.image}`}
@@ -86,10 +65,10 @@ const Card = (props) => {
               <div className="mt-4">
                 <div className="mb-2">
                   <span className="text-xs text-gray-500 block uppercase">Price</span>
-                  <span className="text-xl font-black text-white">${card.price}</span>
+                  <span className="text-xl font-black text-white">{card.price} <span className='text-sm text-gray-400'>THB</span></span>
                 </div>
                 <button
-                  onClick={() => addToCart(card)} 
+                  onClick={() => addToCart(card)}
                   className="btn btn-primary btn-sm w-full ..."
                 >
                   ADD TO CART
@@ -101,34 +80,8 @@ const Card = (props) => {
         ))}
       </div>
 
-      <div className="flex justify-center mt-10 mb-6">
-        <div className="join border border-gray-700">
-          <button
-            className={`join-item btn btn-sm ${currentPage === 1 ? 'btn-disabled' : ''}`}
-            onClick={() => setCurrentPage(prev => prev - 1)}
-          >
-            «
-          </button>
+      <Pagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} />
 
-          {[...Array(totalPages)].map((_, index) => (
-            <button
-              key={index + 1}
-              onClick={() => setCurrentPage(index + 1)}
-              className={`join-item btn btn-sm ${currentPage === index + 1 ? 'btn-primary' : ''}`}
-            >
-              {index + 1}
-            </button>
-          ))}
-
-          <button
-            className={`join-item btn btn-sm ${currentPage === totalPages ? 'btn-disabled' : ''}`}
-            onClick={() => setCurrentPage(prev => prev + 1)}
-          >
-            »
-          </button>
-
-        </div>
-      </div>
     </div>
   );
 };

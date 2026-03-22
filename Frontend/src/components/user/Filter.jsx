@@ -14,7 +14,7 @@ function Filter(props) {
   }
   return (
     <div>
-      <div className="p-6 bg-base-200 w-80 min-h-screen flex flex-col gap-2 text-base-content">
+      <div className="p-6 bg-base-200 w-60 min-h-screen flex flex-col gap-2 text-base-content pr-0">
 
         <section>
           <div className="form-control w-full mb-6">

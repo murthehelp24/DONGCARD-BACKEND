@@ -37,7 +37,7 @@ function NavbarUser() {
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
             <li><a>Home</a></li>
-            <li><Link to='card'>Card</Link></li>
+            <li><Link to=''>Card</Link></li>
             <li><Link to='newCard'>newCard</Link></li>
             <li><Link to='about'>About</Link></li>
           </ul>
@@ -93,7 +93,7 @@ function NavbarUser() {
                 <div className="py-4">
                   <span className="text-sm opacity-70 block">ราคารวม : </span>
                   <span className="text-2xl font-extrabold text-primary">
-                    ฿{totalPrice}
+                     {totalPrice} THB
                   </span>
                 </div>
                 <div className="card-actions">
