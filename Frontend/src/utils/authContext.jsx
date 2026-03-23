@@ -32,5 +32,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Hook สำหรับดึงไปใช้งานง่ายๆ
 export const useAuth = () => useContext(AuthContext);

@@ -50,7 +50,7 @@ const CardDetailUser = () => {
           <div className="py-4 space-y-2">
             <p><span className="text-gray-500 uppercase text-xs block">ID</span> {card.id}</p>
             <p><span className="text-gray-500 uppercase text-xs block">Rarity</span>
-              <span className="badge badge-primary">{card.rarity}</span>
+              <span className="badge badge-ghost badge-lg rounded-sm">{card.rarity}</span>
             </p>
             <p><span className="text-gray-500 uppercase text-xs ">Color :</span>{card.color}</p>
             {card.effect && <p className="text-gray-400 mt-4 text-xl">{card.effect}</p>}

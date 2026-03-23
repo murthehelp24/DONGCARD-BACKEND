@@ -1,15 +1,34 @@
 import { useState } from 'react'
+import mainApi from '../../api/mainApi'
 
-function WishlistUser(props) {
+function WishlistCard(props) {
   const { card } = props
-  const [wishlist, setWishlist] = useState([]);
-
+  const [isLiked, setIsLiked] = useState(card.isFavorited || false)
   
-  const toggleWishlist = (id) => {
-    setWishlist(prev =>
-      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
-    );
-  };
+  const toggleWishlist = async (id) => {
+  try {
+    if (isLiked) {
+      const response = await mainApi.delete(`/wishlist/${id}`);
+      
+      if (response.status === 200) {
+        setIsLiked(false);
+      }
+    } else {
+
+      const response = await mainApi.post('/wishlist', { 
+        cardId: id 
+      });
+
+      if (response.status === 200 || response.status === 201) {
+        setIsLiked(true);
+      }
+    }
+  } catch (error) {
+    console.error("Error updating wishlist:", error.response?.data?.message || error.message);
+  }
+};
+
+
   return (
     <div>
       <button
@@ -18,7 +37,9 @@ function WishlistUser(props) {
       >
         <svg
           xmlns="http://www.w3.org"
-          className={`h-5 w-5 transition-transform active:scale-125 ${wishlist.includes(card.id) ? 'fill-red-500 stroke-red-500' : 'fill-none stroke-white'}`}
+          className={`h-5 w-5 transition-transform active:scale-125 ${
+            isLiked ? 'fill-red-500 stroke-red-500' : 'fill-none stroke-white'
+          }`}
           viewBox="0 0 24 24"
           strokeWidth="2"
         >
@@ -29,4 +50,4 @@ function WishlistUser(props) {
   )
 }
 
-export default WishlistUser
+export default WishlistCard

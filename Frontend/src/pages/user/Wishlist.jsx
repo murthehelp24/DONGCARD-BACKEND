@@ -1,10 +1,10 @@
 import React from 'react'
-import WishlistAll from '../../components/user/WishlistAll'
+import WishlistUser from '../../components/user/WishlistUser'
 
 function Wishlist() {
   return (
     <>
-      <WishlistAll/>
+      <WishlistUser/>
     </>
   )
 }

@@ -41,7 +41,7 @@ async function importCSV() {
       for (const row of results) {
         try {
           const randomPrice = getRandomPrice(row.card_rarity);
-          const randomStock = Math.floor(Math.random() * 30) + 1; /
+          const randomStock = Math.floor(Math.random() * 30) + 1; 
 
           await prisma.card.upsert({
             where: { id: row.card_id }, 

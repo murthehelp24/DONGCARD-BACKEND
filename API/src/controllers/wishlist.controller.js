@@ -30,8 +30,8 @@ export async function addCardWishlist(req, res, next) {
 
 export async function deleteWishlist(req, res, next) {
   try {
-    const { cardId } = req.params
-    await removeWishlist(req.user.id, cardId)
+    const { id } = req.params
+    await removeWishlist(req.user.id, id)
     res.json({ message: 'ลบออกจากรายการโปรดแล้ว' })
   } catch (error) {
     next(error)
