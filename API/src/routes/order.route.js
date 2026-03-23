@@ -12,7 +12,7 @@ router.get('/admin/all', authenticate, adminCheck, adminGetAllOrder)
 router.post('/', authenticate, addOrder)
 router.get('/', authenticate, getMyOrders)
 router.get('/:id', authenticate, getOrderDetail)
-router.patch('/:id', authenticate, upload.single('paymentSlip'), notifyPayment)
+router.patch('/:id/payment', authenticate, upload.single('paymentSlip'), notifyPayment)
 
 
 export default router 

@@ -6,7 +6,6 @@ import BodyUser from '../../components/user/BodyUser'
 function HomeUser() {
   return (
     <>
-    
     <BodyUser/>
     </>
   )

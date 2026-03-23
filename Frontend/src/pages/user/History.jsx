@@ -1,8 +1,11 @@
 import React from 'react'
+import HistoryUser from '../../components/user/HistoryUser'
 
 function History() {
   return (
-    <div>History</div>
+    <>
+      <HistoryUser />
+    </>
   )
 }
 
