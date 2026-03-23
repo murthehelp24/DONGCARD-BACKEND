@@ -2,30 +2,61 @@ import { useCart } from '../../utils/CartContext'
 import { Link, useNavigate } from 'react-router'
 import { Trash2, Plus, Minus } from 'lucide-react'
 import mainApi from '../../api/mainApi'
+import Swal from 'sweetalert2'
+
 
 function CartUser() {
   const { cartItems, totalPrice, cartCount, removeFromCart, updateQuantity, clearCart } = useCart()
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+
 
   const handleCheckout = async () => {
-    // เช็คว่ามีสินค้าไหม
+    // 1. เช็คว่ามีสินค้าไหม
     if (cartItems.length === 0) {
-      alert("ตะกร้าสินค้าว่างเปล่า กรุณาเลือกสินค้าก่อนครับ")
+      Swal.fire({
+        icon: 'warning',
+        title: 'ตะกร้าว่างเปล่า',
+        text: 'กรุณาเลือกสินค้าก่อนดำเนินการชำระเงินครับ',
+        confirmButtonColor: '#3085d6'
+      })
       return
     }
 
-    const address = window.prompt("กรุณากรอกที่อยู่สำหรับการจัดส่ง:")
-    if (!address) {
-      alert("จำเป็นต้องกรอกที่อยู่เพื่อดำเนินการต่อครับ")
-      return;
-    }
+    // 2. ถามที่อยู่ด้วย SweetAlert Input
+    const { value: address } = await Swal.fire({
+      title: 'กรุณากรอกที่อยู่สำหรับการจัดส่ง',
+      input: 'textarea',
+      inputPlaceholder: 'พิมพ์ที่อยู่ของคุณที่นี่...',
+      showCancelButton: true,
+      confirmButtonText: 'ถัดไป',
+      cancelButtonText: 'ยกเลิก',
+      inputValidator: (value) => {
+        if (!value) {
+          return 'จำเป็นต้องกรอกที่อยู่เพื่อดำเนินการต่อครับ';
+        }
+      }
+    });
 
-    // ยืนยันการสั่งซื้อ 
-    const isConfirm = window.confirm(`ยืนยันการสั่งซื้อทั้งหมด ${totalPrice}$ ใช่หรือไม่?`)
+    // ถ้ากดยกเลิกหรือไม่กรอกที่อยู่
+    if (!address) return;
 
-    if (isConfirm) {
+    // 3. ยืนยันการสั่งซื้อ
+    const confirmResult = await Swal.fire({
+      title: 'ยืนยันการสั่งซื้อ?',
+      text: `ยอดรวมทั้งหมดของคุณคือ ${totalPrice}$`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#28a745',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'ใช่, สั่งซื้อเลย!',
+      cancelButtonText: 'ตรวจสอบอีกครั้ง'
+    })
+
+    if (confirmResult.isConfirmed) {
       try {
-        // เตรียม Data ให้ db
+        // แสดง Loading ระหว่างรอ API
+        Swal.showLoading();
+
         const orderData = {
           address: address,
           items: cartItems.map(item => ({
@@ -33,47 +64,55 @@ function CartUser() {
             quantity: Number(item.quantity),
             soldPrice: Number(item.price)
           }))
-        };
+        }
 
-        // ยิง API POST /api/orders
-        const response = await mainApi.post('/orders', orderData);
+        const response = await mainApi.post('/orders', orderData)
 
-        // เช็คโครงสร้างตามรูป image_c13507.png
-        if (response.data && response.data.order) {
+        if (response.data?.order?.id) {
           const orderId = response.data.order.id
 
-          alert("สั่งซื้อสำเร็จ!")
-          clearCart()
+          await Swal.fire({
+            icon: 'success',
+            title: 'สั่งซื้อสำเร็จ!',
+            text: 'กำลังพาคุณไปยังหน้าชำระเงิน',
+            timer: 2000,
+            showConfirmButton: false
+          });
 
+          clearCart()
           navigate(`/card/payment/${orderId}`)
         } else {
-          console.error("Unexpected response structure:", response.data)
-          alert("สร้างออเดอร์สำเร็จแต่หา ID ไม่เจอ")
+          throw new Error("Unexpected response structure")
         }
 
       } catch (err) {
         console.error("Checkout Error:", err.response?.data)
-        alert("เกิดข้อผิดพลาด: " + (err.response?.data?.message || "Internal Server Error"))
+        Swal.fire({
+          icon: 'error',
+          title: 'เกิดข้อผิดพลาด',
+          text: err.response?.data?.message || "ไม่สามารถสร้างออเดอร์ได้ในขณะนี้"
+        })
       }
     }
   };
 
+
   return (
-    <div className="min-h-screen bg-gray-100 p-8 text-gray-800">
+    <div className="min-h-screen p-8 text-base-200">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold text-[#1e293b]">ตะกร้าสินค้า</h1>
+        <h1 className="text-3xl font-bold text-[#d8d8d8]">ตะกร้าสินค้า</h1>
         <p className="text-gray-500 mb-8">คุณมีการ์ดในตะกร้า {cartCount} ใบ</p>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-4">
             {cartItems.map((card) => (
-              <div key={card.id} className="flex items-center bg-gradient-to-r from-gray-200 to-gray-300 p-4 rounded-2xl shadow-sm relative group">
+              <div key={card.id} className="flex items-center bg-gradient-to-r from-gray-600 to-gray-100 p-4 rounded-2xl shadow-sm relative group">
                 <div className="w-24 h-32 bg-white rounded-lg overflow-hidden flex-shrink-0">
                   <img src={`https://wsrv.nl/?url=${card.image}`} alt={card.name} className="w-full h-auto object-contain" />
                 </div>
                 <div className="ml-6 flex-grow ">
                   <h3 className="text-xl font-bold">{card.name}</h3>
-                  <p className="text-gray-500">{card.id}</p>
+                  <p className="text-gray-300">{card.id}</p>
                   <h3 className="badge badge-ghost badge-sm rounded-sm">{card.rarity}</h3>
                   <div className="flex items-center bg-[#1e293b] w-fit rounded-lg mt-4 overflow-hidden">
                     <button onClick={() => updateQuantity(card.id, -1)} className="p-2 text-white"><Minus size={14} /></button>
@@ -89,7 +128,7 @@ function CartUser() {
             ))}
           </div>
 
-          <div className="bg-gray-300 p-6 rounded-3xl h-fit shadow-md">
+          <div className="bg-gradient-to-b from-gray-500 to-gray-100 p-6 rounded-3xl h-fit shadow-md">
             <h2 className="text-xl font-bold mb-6">สรุปการสั่งซื้อ</h2>
             <div className="flex justify-between text-2xl font-bold py-6 border-t border-gray-400">
               <span>ราคารวม</span>
@@ -103,7 +142,7 @@ function CartUser() {
               >
                 ดำเนินการชำระเงิน
               </button>
-              <Link to="/user" className="btn btn-block btn-outline border-gray-500 text-gray-600 rounded-full py-4 h-auto text-center">
+              <Link to="/card" className="btn btn-block btn-outline border-gray-500 text-gray-600 rounded-full py-4 h-auto text-center">
                 เลือกซื้ออีก
               </Link>
             </div>
@@ -114,4 +153,4 @@ function CartUser() {
   );
 }
 
-export default CartUser;
+export default CartUser

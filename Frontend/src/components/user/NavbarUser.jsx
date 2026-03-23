@@ -16,7 +16,7 @@ function NavbarUser() {
   }
   return (
     <>
-      <div className="navbar bg-base-100 shadow-sm">
+      <div className="navbar bg-base-100 shadow-sm sticky top-0 z-[100] backdrop-blur-md bg-base-100/80">
         <div className="navbar-start">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -39,7 +39,7 @@ function NavbarUser() {
             <li><a>หน้าหลัก</a></li>
             <li><Link to=''>สินค้า</Link></li>
             <li><Link to='newCard'>สินค้ามาใหม่</Link></li>
-            <li><Link to='about'>รายการโปรด</Link></li>
+            <li><Link to='wishlist'>รายการโปรด</Link></li>
           </ul>
         </div>
 

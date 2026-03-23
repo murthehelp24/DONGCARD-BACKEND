@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useCart } from '../../utils/CartContext';
 import mainApi from '../../api/mainApi';
-import WishlistUser from './WishlistUser';
+import WishlistUser from './WishlistCard';
 import Pagination from './Pagination';
 import { Link } from 'react-router';
 

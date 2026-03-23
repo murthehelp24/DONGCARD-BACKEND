@@ -1,34 +1,34 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router';
-import mainApi from '../../api/mainApi';
-import { useCart } from '../../utils/CartContext';
+import { useState, useEffect } from 'react'
+import { useParams, useNavigate } from 'react-router'
+import mainApi from '../../api/mainApi'
+import { useCart } from '../../utils/CartContext'
 
 const CardDetailUser = () => {
-  const { id } = useParams(); // ดึง ID จาก URL
-  const navigate = useNavigate();
-  const { addToCart } = useCart();
-  const [card, setCard] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const { addToCart } = useCart()
+  const [card, setCard] = useState(null)
+  const [loading, setLoading] = useState(true)
 
 
   useEffect(() => {
     const fetchCardDetail = async () => {
       try {
-        setLoading(true);
-        const response = await mainApi.get(`/cards/${id}`);
+        setLoading(true)
+        const response = await mainApi.get(`/cards/${id}`)
         setCard(response.data.card);
       } catch (err) {
-        console.error("Error fetching card details:", err);
+        console.error("Error fetching card details:", err)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
     };
 
-    fetchCardDetail();
-  }, [id]);
+    fetchCardDetail()
+  }, [id])
 
-  if (loading) return <div className="p-10 text-center text-white">Loading...</div>;
-  if (!card) return <div className="p-10 text-center text-white">Card not found.</div>;
+  if (loading) return <div className="p-10 text-center text-white">Loading...</div>
+  if (!card) return <div className="p-10 text-center text-white">Card not found.</div>
 
   return (
     <div className="min-h-screen bg-base-200 p-6 flex justify-center items-center">
@@ -52,8 +52,8 @@ const CardDetailUser = () => {
             <p><span className="text-gray-500 uppercase text-xs block">Rarity</span>
               <span className="badge badge-primary">{card.rarity}</span>
             </p>
-            <p><span className="text-gray-500 uppercase text-xs block">Color</span> {card.color}</p>
-            {card.description && <p className="text-gray-400 mt-4">{card.description}</p>}
+            <p><span className="text-gray-500 uppercase text-xs ">Color :</span>{card.color}</p>
+            {card.effect && <p className="text-gray-400 mt-4 text-xl">{card.effect}</p>}
           </div>
 
           <div className="mt-auto">
