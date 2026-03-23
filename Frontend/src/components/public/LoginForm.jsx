@@ -40,7 +40,7 @@ export default function LoginPage() {
         if (userData.role === 'ADMIN') {
           navigate('/admin');
         } else {
-          navigate('/user');
+          navigate('/card');
         }
       }, 2000);
 

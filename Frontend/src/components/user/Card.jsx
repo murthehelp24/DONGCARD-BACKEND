@@ -3,6 +3,7 @@ import { useCart } from '../../utils/CartContext';
 import mainApi from '../../api/mainApi';
 import WishlistUser from './WishlistUser';
 import Pagination from './Pagination';
+import { Link } from 'react-router';
 
 const Card = (props) => {
   const { filters } = props
@@ -47,11 +48,13 @@ const Card = (props) => {
 
               <WishlistUser card={card} />
 
-              <img
-                src={`https://wsrv.nl/?url=${card.image}`}
-                alt={card.name}
-                className="w-full h-auto object-contain rounded shadow-2xl group-hover:scale-105 transition-transform duration-500"
-              />
+              <Link to={`/card/${card.id}`} >
+                <img
+                  src={`https://wsrv.nl/?url=${card.image}`}
+                  alt={card.name}
+                  className="w-full h-auto object-contain rounded shadow-2xl group-hover:scale-105 transition-transform duration-500"
+                />
+              </Link>
             </div>
 
             <div className="w-[55%] p-4 flex flex-col justify-between">

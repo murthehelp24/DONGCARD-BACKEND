@@ -25,10 +25,10 @@ function NavbarUser() {
               </svg>
             </div>
             <ul tabIndex="-1" className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-              <li><a>Home</a></li>
-              <li><a>Card</a></li>
-              <li><a>New Card</a></li>
-              <li><a>About</a></li>
+              <li><a>หน้าหลัก</a></li>
+              <li><a>สินค้า</a></li>
+              <li><a>สินค้ามาใหม่</a></li>
+              <li><a>รายการโปรด</a></li>
             </ul>
           </div>
           <a className="btn btn-ghost text-xl">DONGCARD</a>
@@ -36,10 +36,10 @@ function NavbarUser() {
 
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
-            <li><a>Home</a></li>
-            <li><Link to=''>Card</Link></li>
-            <li><Link to='newCard'>newCard</Link></li>
-            <li><Link to='about'>About</Link></li>
+            <li><a>หน้าหลัก</a></li>
+            <li><Link to=''>สินค้า</Link></li>
+            <li><Link to='newCard'>สินค้ามาใหม่</Link></li>
+            <li><Link to='about'>รายการโปรด</Link></li>
           </ul>
         </div>
 
@@ -97,7 +97,7 @@ function NavbarUser() {
                   </span>
                 </div>
                 <div className="card-actions">
-                  <Link to="/user/cart" className="btn btn-primary btn-block hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-lg shadow-primary/30">ดูตะกร้าสินค้า</Link>
+                  <Link to="/card/cart" className="btn btn-primary btn-block hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-lg shadow-primary/30">ดูตะกร้าสินค้า</Link>
                 </div>
               </div>
             </div>

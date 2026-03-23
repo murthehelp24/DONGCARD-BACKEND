@@ -4,55 +4,56 @@ import { Trash2, Plus, Minus } from 'lucide-react'
 import mainApi from '../../api/mainApi'
 
 function CartUser() {
-  const { cartItems, totalPrice, cartCount, removeFromCart, updateQuantity, clearCart } = useCart();
+  const { cartItems, totalPrice, cartCount, removeFromCart, updateQuantity, clearCart } = useCart()
   const navigate = useNavigate();
 
   const handleCheckout = async () => {
     // เช็คว่ามีสินค้าไหม
     if (cartItems.length === 0) {
-      alert("ตะกร้าสินค้าว่างเปล่า กรุณาเลือกสินค้าก่อนครับ");
-      return;
+      alert("ตะกร้าสินค้าว่างเปล่า กรุณาเลือกสินค้าก่อนครับ")
+      return
     }
 
-    const address = window.prompt("กรุณากรอกที่อยู่สำหรับการจัดส่ง:");
+    const address = window.prompt("กรุณากรอกที่อยู่สำหรับการจัดส่ง:")
     if (!address) {
-      alert("จำเป็นต้องกรอกที่อยู่เพื่อดำเนินการต่อครับ");
+      alert("จำเป็นต้องกรอกที่อยู่เพื่อดำเนินการต่อครับ")
       return;
     }
 
     // ยืนยันการสั่งซื้อ 
-    const isConfirm = window.confirm(`ยืนยันการสั่งซื้อทั้งหมด ${totalPrice}$ ใช่หรือไม่?`);
+    const isConfirm = window.confirm(`ยืนยันการสั่งซื้อทั้งหมด ${totalPrice}$ ใช่หรือไม่?`)
 
     if (isConfirm) {
       try {
         // เตรียม Data ให้ db
         const orderData = {
-          address: address, 
+          address: address,
           items: cartItems.map(item => ({
             cardId: item.id,
             quantity: Number(item.quantity),
-            soldPrice: Number(item.price) 
+            soldPrice: Number(item.price)
           }))
         };
 
         // ยิง API POST /api/orders
         const response = await mainApi.post('/orders', orderData);
 
-        if (response.status === 200 || response.status === 201) {
-          alert("สร้างออเดอร์สำเร็จและตัดสต็อกเรียบร้อยแล้ว!");
+        // เช็คโครงสร้างตามรูป image_c13507.png
+        if (response.data && response.data.order) {
+          const orderId = response.data.order.id
 
-          const orderId = response.data.id; // หรือ response.data.orderId ตามที่ Backend ส่งมา
-          console.log(orderId)
-          clearCart(); // ล้างตะกร้า
+          alert("สั่งซื้อสำเร็จ!")
+          clearCart()
 
-          // 4. พาไปหน้าชำระเงิน (อ้างอิงจาก API: /api/orders/:id/payment)
-          navigate(`/payment/${orderId}`);
+          navigate(`/card/payment/${orderId}`)
+        } else {
+          console.error("Unexpected response structure:", response.data)
+          alert("สร้างออเดอร์สำเร็จแต่หา ID ไม่เจอ")
         }
+
       } catch (err) {
-        console.error("Checkout Error:", err);
-        // แสดง Error จาก Backend (เช่น "สินค้าในสต็อกไม่พอ")
-        const errorMessage = err.response?.data?.message || "เกิดข้อผิดพลาดในการสั่งซื้อ";
-        alert(`ล้มเหลว: ${errorMessage}`);
+        console.error("Checkout Error:", err.response?.data)
+        alert("เกิดข้อผิดพลาด: " + (err.response?.data?.message || "Internal Server Error"))
       }
     }
   };

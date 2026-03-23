@@ -6,7 +6,6 @@ import { prisma } from '../src/lib/prisma.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// ฟังก์ชันสำหรับสุ่มราคาตามความหายาก (Rarity)
 const getRandomPrice = (rarity) => {
   const priceMap = {
     'SP CARD': { min: 2000, max: 5000 },
@@ -18,7 +17,6 @@ const getRandomPrice = (rarity) => {
     'C': { min: 5, max: 15 },
   };
 
-  // ถ้าไม่เจอ rarity ที่กำหนด ให้สุ่มช่วง 20-100 บาท
   const range = priceMap[rarity] || { min: 20, max: 100 };
   return Math.floor(Math.random() * (range.max - range.min + 1)) + range.min;
 };
@@ -42,9 +40,8 @@ async function importCSV() {
 
       for (const row of results) {
         try {
-          // สุ่มค่าเตรียมไว้ก่อน
           const randomPrice = getRandomPrice(row.card_rarity);
-          const randomStock = Math.floor(Math.random() * 30) + 1; // สุ่มสต็อก 1-30 ใบ
+          const randomStock = Math.floor(Math.random() * 30) + 1; /
 
           await prisma.card.upsert({
             where: { id: row.card_id }, 
@@ -59,7 +56,7 @@ async function importCSV() {
               color: row.card_color,
               type: row.card_type,
               power: row.card_power ? Math.floor(parseFloat(row.card_power)) : null,
-              attribute: null,
+              effect: row.card_effect || null,
               image: row.card_image,
               price: randomPrice,
               stock: randomStock,

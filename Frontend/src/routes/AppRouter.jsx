@@ -3,7 +3,7 @@ import ProtectRouter from "./ProtectRouter";
 import Layout from '../layouts/Layout'
 import LayoutUser from '../layouts/LayoutUser'
 import Home from '../pages/public/Home'
-import CardDetail from '../pages/public/CardDetail'
+import CardDetail from '../pages/user/CardDetail'
 import Cart from '../pages/user/Cart'
 import Checkout from '../pages/user/Checkout'
 import History from '../pages/user/History'
@@ -24,7 +24,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: 'home', element: <Home /> },
-      { path: 'card/:id', element: <CardDetail /> }
+      
     ]
   },
 
@@ -33,10 +33,11 @@ const router = createBrowserRouter([
     element: <ProtectRouter allowRoles={['USER', 'ADMIN']} />,
     children: [
       {
-        path: '/user',
+        path: '/card',
         element: <LayoutUser />,
         children: [
           { index: true, element: <HomeUser /> },
+          { path: ':id', element: <CardDetail /> },
           { path: 'cart', element: <Cart /> },
           { path: 'checkout', element: <Checkout /> },
           { path: 'history', element: <History /> },

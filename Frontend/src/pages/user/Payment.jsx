@@ -1,8 +1,11 @@
 import React from 'react'
+import PaymentUser from '../../components/user/PaymentUser'
 
 function Payment() {
   return (
-    <div>Payment</div>
+    <>
+      <PaymentUser/>
+    </>
   )
 }
 
